@@ -2,21 +2,28 @@ package todo.list.nganmtt.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.http.HttpStatus;
 
 import javax.crypto.spec.SecretKeySpec;
 
+@Configuration
 public class SecurityConfig {
     private final String[] PUBLIC_URLS = {
-
+        "/auth/login",
+        "/auth/register",
+        "/auth/**"
     };
 
-    @Value("${jwt.secret")
+    @Value("${jwt.secret}")
     private String jwtSecret;
 
     @Bean
@@ -32,6 +39,11 @@ public class SecurityConfig {
                         oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()))
         );
 
+        http.formLogin(AbstractHttpConfigurer::disable);
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        http.exceptionHandling(ex -> ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
+
         http.csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
@@ -45,5 +57,4 @@ public class SecurityConfig {
                 .macAlgorithm(MacAlgorithm.HS512)
                 .build();
     }
-
 }

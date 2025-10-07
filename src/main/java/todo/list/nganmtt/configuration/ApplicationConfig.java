@@ -1,0 +1,39 @@
+package todo.list.nganmtt.configuration;
+
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import todo.list.nganmtt.model.User;
+import todo.list.nganmtt.repository.UserRepository;
+
+@Configuration
+@RequiredArgsConstructor
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
+public class ApplicationConfig {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(10);
+    }
+
+    @Bean
+    ApplicationRunner applicationRunner(UserRepository userRepository, PasswordEncoder passwordEncoder){
+        return args -> {
+            if (userRepository.count() == 0) {
+                User user = new User();
+                user.setUsername("admin");
+                user.setEmail("admin@example.com");
+                user.setPassword(passwordEncoder.encode("admin"));
+
+                userRepository.save(user);
+                log.info("Default admin user created with username: admin");
+            }
+        };
+    }
+}

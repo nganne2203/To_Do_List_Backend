@@ -13,6 +13,7 @@ import todo.list.nganmtt.exception.ErrorCode;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApiResult<T> {
+    @Builder.Default
     int code = 1000;
     String message;
     T result;
