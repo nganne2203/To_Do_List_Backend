@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import todo.list.nganmtt.dto.request.AuthenticationRequest;
@@ -29,6 +28,7 @@ import java.util.Date;
 public class AuthenticationServiceImplement implements AuthenticationService {
     UserRepository userRepository;
     UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
 
     @NonFinal
     @Value("${jwt.secret}")
@@ -41,8 +41,6 @@ public class AuthenticationServiceImplement implements AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
@@ -69,8 +67,6 @@ public class AuthenticationServiceImplement implements AuthenticationService {
         }
 
         User user = userMapper.toUser(request);
-
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
