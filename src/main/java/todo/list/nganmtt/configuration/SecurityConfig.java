@@ -29,6 +29,7 @@ public class SecurityConfig {
         "/auth/register",
         "/auth/**",
         "/v3/api-docs/**",
+        "/api-docs/**",
         "/swagger-ui/**",
         "/swagger-ui.html",
         "/swagger-resources/**",
@@ -69,7 +70,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
 
