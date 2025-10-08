@@ -22,7 +22,9 @@ public class SwaggerConfiguration {
 
     @Bean
     public OpenAPI openApi() {
-        String serverUrl = appProperties.getBackendUrl();
+        String serverUrl = appProperties.getBackendUrl() != null
+                ? appProperties.getBackendUrl()
+                : "http://localhost:8080";
 
         if (contextPath != null && !contextPath.isEmpty() && !contextPath.equals("/")) {
             serverUrl = serverUrl + contextPath;
@@ -31,18 +33,18 @@ public class SwaggerConfiguration {
         return new OpenAPI()
                 .addServersItem(new Server()
                         .url(serverUrl)
-                        .description("Production Server"))
+                        .description("To Do List API Server"))
                 .info(new Info()
                         .title("To Do List API")
                         .version("1.0")
                         .description("API documentation for To Do List Application")
                         .contact(new Contact()
-                                .name("nganmtt")
+                                .name("Mai Thị Thanh Ngân")
                                 .email("thanhngan.pt2004@gmail.com")
                                 .url("https://www.nganmtt.com")
                         )
                         .license(new License()
-                                .name("Apache 2.0")
+                                .name("Apache 2.0 License")
                                 .url("https://www.apache.org/licenses/LICENSE-2.0.html")
                         )
                 )
