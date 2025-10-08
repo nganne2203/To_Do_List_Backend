@@ -7,10 +7,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 import todo.list.nganmtt.dto.request.ApiResult;
 import todo.list.nganmtt.dto.request.AuthenticationRequest;
 import todo.list.nganmtt.dto.request.UserCreationRequest;
@@ -21,6 +19,7 @@ import todo.list.nganmtt.service.AuthenticationService;
 @RequestMapping("/auth")
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class AuthenticationController {
 
     AuthenticationService authenticationService;
@@ -33,8 +32,8 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
     })
-    @PostMapping("/login")
-    ApiResult<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
+    @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
+    public ApiResult<AuthenticationResponse> login(@Valid @RequestBody AuthenticationRequest request) {
         var result = authenticationService.authenticate(request);
 
         return ApiResult.<AuthenticationResponse>builder()
@@ -49,8 +48,8 @@ public class AuthenticationController {
             }),
             @ApiResponse(responseCode = "400", description = "Bad request because username or email is already exist", content = @Content)
     })
-    @PostMapping("/register")
-    ApiResult<AuthenticationResponse> register(@RequestBody UserCreationRequest request) {
+    @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")
+    public ApiResult<AuthenticationResponse> register(@Valid @RequestBody UserCreationRequest request) {
         var result = authenticationService.register(request);
 
         return ApiResult.<AuthenticationResponse>builder()
