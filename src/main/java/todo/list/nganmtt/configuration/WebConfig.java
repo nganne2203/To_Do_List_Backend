@@ -20,7 +20,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOriginPatterns("*")
                 .allowedOrigins(
-                        appProperties.getBackendUrl()
+                        appProperties.getBackendUrl(),
+                        appProperties.getFrontendUrl()
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")

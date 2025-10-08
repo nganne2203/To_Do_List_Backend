@@ -5,13 +5,23 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.servers.Server;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
+@RequiredArgsConstructor
 public class SwaggerConfiguration {
+
+    private final AppProperties appProperties;
 
     @Bean
     public OpenAPI openApi() {
         return new OpenAPI()
+                .addServersItem(new Server()
+                        .url(appProperties.getBackendUrl())
+                        .description("Production Server"))
                 .info(new Info()
                         .title("To Do List API")
                         .version("1.0")
