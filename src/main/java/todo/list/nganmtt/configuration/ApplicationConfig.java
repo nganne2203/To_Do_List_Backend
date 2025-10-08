@@ -18,19 +18,14 @@ import todo.list.nganmtt.repository.UserRepository;
 public class ApplicationConfig {
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
-    }
-
-    @Bean
     ApplicationRunner applicationRunner(UserRepository userRepository, PasswordEncoder passwordEncoder){
         return args -> {
             if (userRepository.count() == 0) {
-                User user = new User();
-                user.setUsername("admin");
-                user.setEmail("admin@example.com");
-                user.setPassword(passwordEncoder.encode("admin"));
-
+                User user = User.builder()
+                        .username("admin")
+                        .email("admin@example.com")
+                        .password(passwordEncoder.encode("admin"))
+                        .build();
                 userRepository.save(user);
                 log.info("Default admin user created with username: admin");
             }
