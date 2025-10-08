@@ -7,6 +7,7 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,11 +17,20 @@ public class SwaggerConfiguration {
 
     private final AppProperties appProperties;
 
+    @Value("${server.servlet.context-path:}")
+    private String contextPath;
+
     @Bean
     public OpenAPI openApi() {
+        String serverUrl = appProperties.getBackendUrl();
+
+        if (contextPath != null && !contextPath.isEmpty() && !contextPath.equals("/")) {
+            serverUrl = serverUrl + contextPath;
+        }
+
         return new OpenAPI()
                 .addServersItem(new Server()
-                        .url(appProperties.getBackendUrl())
+                        .url(serverUrl)
                         .description("Production Server"))
                 .info(new Info()
                         .title("To Do List API")
