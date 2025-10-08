@@ -19,8 +19,9 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOriginPatterns(
-                        appProperties.getBackendUrl(),
-                        appProperties.getFrontendUrl()
+                        appProperties.getBackendUrl() != null ? appProperties.getBackendUrl() : "https://*.railway.app",
+                        appProperties.getFrontendUrl() != null ? appProperties.getFrontendUrl() : "http://localhost:*",
+                        "https://todolistbackend-production-e27a.up.railway.app"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
