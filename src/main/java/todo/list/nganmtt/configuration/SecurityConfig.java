@@ -40,7 +40,7 @@ public class SecurityConfig {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    @Value("${app.frontend.url:http://localhost:5173}")
+    @Value("${app.rontend.url:http://localhost:5173}")
     private String frontendUrl;
 
     @Value("${app.backend.url:https://todolistbackend-production-e27a.up.railway.app}")
