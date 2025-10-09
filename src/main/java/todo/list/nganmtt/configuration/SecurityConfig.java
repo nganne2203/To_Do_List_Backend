@@ -1,16 +1,12 @@
 package todo.list.nganmtt.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.web.cors.CorsConfiguration;
@@ -18,7 +14,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.http.HttpStatus;
 
-import javax.crypto.spec.SecretKeySpec;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,6 +23,9 @@ public class SecurityConfig {
     private final String[] PUBLIC_URLS = {
             "/auth/login",
             "/auth/register",
+            "/auth/introspect",
+            "auth/refresh",
+            "auth/logout",
             "/auth/**",
             "/v3/api-docs/**",
             "/api-docs/**",
@@ -37,8 +35,8 @@ public class SecurityConfig {
             "/webjars/**"
     };
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    @Autowired
+    private CustomJwtDecoder customJwtDecoder;
 
     @Value("${app.rontend.url:http://localhost:5173}")
     private String frontendUrl;
@@ -47,7 +45,7 @@ public class SecurityConfig {
     private String backendUrl;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, CustomJwtDecoder customJwtDecoder) throws Exception {
         http.authorizeHttpRequests(
                 request -> request
                         .requestMatchers(PUBLIC_URLS).permitAll()
@@ -56,8 +54,8 @@ public class SecurityConfig {
 
         http.oauth2ResourceServer(
                 oauth2 -> oauth2
-                        .jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()))
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                        .jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder))
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
         );
 
         http.formLogin(AbstractHttpConfigurer::disable);
@@ -85,18 +83,5 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
-
-    @Bean
-    JwtDecoder jwtDecoder() {
-        SecretKeySpec key = new SecretKeySpec(jwtSecret.getBytes(), "HS512");
-        return NimbusJwtDecoder.withSecretKey(key)
-                .macAlgorithm(MacAlgorithm.HS512)
-                .build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
     }
 }
