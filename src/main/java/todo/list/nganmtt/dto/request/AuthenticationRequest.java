@@ -1,20 +1,35 @@
 package todo.list.nganmtt.dto.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import todo.list.nganmtt.validator.RequiredField;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Schema(
+        description = "Request object for user authentication",
+        title = "AuthenticationRequest",
+        requiredProperties = {
+            "username",
+            "password"
+        },
+        example = """
+        {
+            "username": "johndoe",
+            "password": "securePassword123"
+        }
+        """
+)
 public class AuthenticationRequest {
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
+    @RequiredField
+    @Size(min = 3, max = 50, message = "INVALID_USERNAME")
     String username;
 
-    @NotBlank(message = "Password is required")
+    @RequiredField
     String password;
 }

@@ -59,6 +59,13 @@ public class AuthenticationController {
                 .build();
     }
 
+    @Operation(summary = "Token introspection", description = "Check the validity of a token", tags = {"Authentication"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Token is valid", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = IntrospectResponse.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Unauthenticated", content = @Content)
+    })
     @PostMapping("/introspect")
     ApiResult<IntrospectResponse> introspect(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
         var result = authenticationService.introspect(request);
@@ -67,6 +74,12 @@ public class AuthenticationController {
                 .build();
     }
 
+    @Operation(summary = "User logout", description = "Invalidate the current token", tags = {"Authentication"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful logout", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))
+            })
+    })
     @PostMapping("/logout")
     ApiResult<Void> logout (@RequestBody LogoutRequest request) throws ParseException, JOSEException {
         authenticationService.logout(request);
@@ -75,6 +88,13 @@ public class AuthenticationController {
                 .build();
     }
 
+    @Operation(summary = "Token refresh", description = "Refresh a new token", tags = {"Authentication"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Token refresh success", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = AuthenticationResponse.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Unauthenticated", content = @Content)
+    })
     @PostMapping("/refresh")
     ApiResult<AuthenticationResponse> refresh(@RequestBody RefreshRequest request) throws ParseException, JOSEException {
         var result = authenticationService.refreshToken(request);
