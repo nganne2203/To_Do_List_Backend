@@ -1,8 +1,8 @@
 package todo.list.nganmtt.service.implement;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,8 +19,6 @@ import todo.list.nganmtt.repository.UserRepository;
 import todo.list.nganmtt.service.TaskService;
 
 import java.util.List;
-
-import static java.util.Arrays.stream;
 
 @Service
 @RequiredArgsConstructor
@@ -72,8 +70,12 @@ public class TaskServiceImplement implements TaskService {
     }
 
     @Override
+    @Transactional
     @PreAuthorize("@taskSecurity.isOwner(#id)")
     public void deleteTask(String id) {
+        if (!taskRepository.existsById(id)) {
+            throw new AppException(ErrorCode.TASK_NOT_FOUND);
+        }
         taskRepository.deleteTaskById(id);
     }
 

@@ -31,27 +31,25 @@ public class CustomJwtDecoder implements JwtDecoder {
 
     @Override
     public Jwt decode(String token) throws JwtException {
-        IntrospectResponse response = null;
         try {
-            response = authenticationService.introspect(IntrospectRequest.builder()
-                            .token(token)
+            var response = authenticationService.introspect(IntrospectRequest.builder()
+                    .token(token)
                     .build());
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        } catch (JOSEException e) {
-            throw new RuntimeException(e);
+
+            if (!response.isValid())
+                throw  new JwtException("Invalid token");
+
+        } catch (JOSEException | ParseException e ) {
+            throw new JwtException("Invalid JWT token: " + e.getMessage(), e);
         }
-        if (!response.isValid())
-            throw new JwtException("Invalid token");
 
         if (Objects.isNull(jwtDecoder)) {
-            SecretKeySpec key = new SecretKeySpec(signerKey.getBytes(), "HmacSHA256");
+            SecretKeySpec secretKey = new SecretKeySpec(signerKey.getBytes(), "HmacSHA256");
             jwtDecoder = NimbusJwtDecoder
-                    .withSecretKey(key)
+                    .withSecretKey(secretKey)
                     .macAlgorithm(MacAlgorithm.HS512)
                     .build();
         }
-
         return jwtDecoder.decode(token);
     }
 }
