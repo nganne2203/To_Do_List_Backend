@@ -24,7 +24,7 @@ import todo.list.nganmtt.validator.RequiredField;
         example = """
         {
             "username": "johndoe",
-            "email": "
+            "email": "abc@gmail.com",
             "password": "securePassword123"
         }
         """
