@@ -1,23 +1,26 @@
-package todo.list.nganmtt.dto.response;
+package todo.list.nganmtt.dto.request;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import todo.list.nganmtt.validator.RequiredField;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TaskResponse {
-    String id;
+public class TaskCreateRequest {
+    @RequiredField
     String title;
     String description;
+    @FutureOrPresent(message = "DUE_DATE_VALIDATION")
     @JsonFormat(pattern = "HH:mm, dd/MM/yyyy")
+    @NotNull(message = "DUE_DATE_REQUIRED")
     LocalDateTime dueDate;
     boolean completed;
-    @JsonFormat(pattern = "HH:mm, dd/MM/yyyy")
-    LocalDateTime createdAt;
 }

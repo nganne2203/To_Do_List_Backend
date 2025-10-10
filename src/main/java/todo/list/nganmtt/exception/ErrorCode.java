@@ -18,7 +18,11 @@ public enum ErrorCode {
     INVALID_USERNAME(1010, "Username must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(1011, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
     FIELD_REQUIRED(1012, "Field {name} is required", HttpStatus.BAD_REQUEST),
-    INVALID_EMAIL(1013, "Email should be valid", HttpStatus.BAD_REQUEST)
+    INVALID_EMAIL(1013, "Email should be valid", HttpStatus.BAD_REQUEST),
+    UNAUTHENTICATED(1014, "Unauthenticated access", HttpStatus.FORBIDDEN),
+    TASK_NOT_FOUND(2001, "Task not found", HttpStatus.NOT_FOUND),
+    DUE_DATE_VALIDATION(2002, "Due date must be in the future", HttpStatus.BAD_REQUEST),
+    DUE_DATE_REQUIRED(2003, "Due date is required", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;

@@ -18,6 +18,11 @@ import todo.list.nganmtt.repository.UserRepository;
 public class ApplicationConfig {
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(10);
+    }
+
+    @Bean
     ApplicationRunner applicationRunner(UserRepository userRepository, PasswordEncoder passwordEncoder){
         return args -> {
             if (userRepository.count() == 0) {
