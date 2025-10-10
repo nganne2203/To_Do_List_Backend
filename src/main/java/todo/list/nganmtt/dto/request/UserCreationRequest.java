@@ -1,5 +1,6 @@
 package todo.list.nganmtt.dto.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import jakarta.validation.constraints.NotBlank;
@@ -12,6 +13,22 @@ import todo.list.nganmtt.validator.RequiredField;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Schema(
+        description = "Request object for user creation",
+        title = "UserCreationRequest",
+        requiredProperties = {
+            "username",
+            "email",
+            "password"
+        },
+        example = """
+        {
+            "username": "johndoe",
+            "email": "
+            "password": "securePassword123"
+        }
+        """
+)
 public class UserCreationRequest {
     @RequiredField
     @Size(min = 3, max = 50, message = "INVALID_USERNAME")

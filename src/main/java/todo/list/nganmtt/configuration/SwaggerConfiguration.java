@@ -1,10 +1,13 @@
 package todo.list.nganmtt.configuration;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +25,8 @@ public class SwaggerConfiguration {
 
     @Bean
     public OpenAPI openApi() {
+        String securitySchemeName = "bearerAuth";
+
         String serverUrl = appProperties.getBackendUrl() != null
                 ? appProperties.getBackendUrl()
                 : "http://localhost:8080";
@@ -55,6 +60,15 @@ public class SwaggerConfiguration {
                 .externalDocs(new ExternalDocumentation()
                         .description("GitHub Repository")
                         .url("https://github.com/nganne2203/To_Do_List_Backend")
+                )
+                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+                .components(new Components()
+                        .addSecuritySchemes(securitySchemeName,
+                                new SecurityScheme()
+                                        .name(securitySchemeName)
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT"))
                 );
     }
 }

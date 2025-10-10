@@ -9,7 +9,10 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Schema(description = "Response object for authentication results")
+@Schema(
+        description = "Response object for authentication results",
+        title = "AuthenticationResponse"
+)
 public class AuthenticationResponse {
     String token;
     boolean authenticated;

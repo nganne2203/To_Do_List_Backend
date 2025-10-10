@@ -44,7 +44,13 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public void deleteMyAccount(String id) {
-        userRepository.deleteById(id);
+        try {
+            User deleteUser = userRepository.findById(id)
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+            userRepository.delete(deleteUser);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.DELETE_USER_FAILED);
+        }
     }
 
 
