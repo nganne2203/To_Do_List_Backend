@@ -2,6 +2,7 @@ package todo.list.nganmtt.dto.request;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "Standard API response wrapper", title = "ApiResult")
 public class ApiResult<T> {
     @Builder.Default
     int code = 1000;

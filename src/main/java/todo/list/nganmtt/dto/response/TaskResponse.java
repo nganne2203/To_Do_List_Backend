@@ -1,5 +1,6 @@
 package todo.list.nganmtt.dto.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,6 +12,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Schema(
+        description = "Response object for task details",
+        title = "TaskResponse"
+)
 public class TaskResponse {
     String id;
     String title;
