@@ -1,5 +1,6 @@
 package todo.list.nganmtt.controller;
 
+import com.nimbusds.jose.JOSEException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,11 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
-import todo.list.nganmtt.dto.request.ApiResult;
-import todo.list.nganmtt.dto.request.AuthenticationRequest;
-import todo.list.nganmtt.dto.request.UserCreationRequest;
+import todo.list.nganmtt.dto.request.*;
 import todo.list.nganmtt.dto.response.AuthenticationResponse;
+import todo.list.nganmtt.dto.response.IntrospectResponse;
 import todo.list.nganmtt.service.AuthenticationService;
+
+import java.text.ParseException;
 
 @RestController
 @RequestMapping("/auth")
@@ -52,6 +54,30 @@ public class AuthenticationController {
     public ApiResult<AuthenticationResponse> register(@Valid @RequestBody UserCreationRequest request) {
         var result = authenticationService.register(request);
 
+        return ApiResult.<AuthenticationResponse>builder()
+                .result(result)
+                .build();
+    }
+
+    @PostMapping("/introspect")
+    ApiResult<IntrospectResponse> introspect(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
+        var result = authenticationService.introspect(request);
+        return ApiResult.<IntrospectResponse>builder()
+                .result(result)
+                .build();
+    }
+
+    @PostMapping("/logout")
+    ApiResult<Void> logout (@RequestBody LogoutRequest request) throws ParseException, JOSEException {
+        authenticationService.logout(request);
+        return ApiResult.<Void>builder()
+                .result(null)
+                .build();
+    }
+
+    @PostMapping("/refresh")
+    ApiResult<AuthenticationResponse> refresh(@RequestBody RefreshRequest request) throws ParseException, JOSEException {
+        var result = authenticationService.refreshToken(request);
         return ApiResult.<AuthenticationResponse>builder()
                 .result(result)
                 .build();

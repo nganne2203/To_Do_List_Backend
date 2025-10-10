@@ -4,18 +4,18 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "task")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 public class Task {
 
     @Id
@@ -23,9 +23,11 @@ public class Task {
     String id;
     String title;
     String description;
-    LocalDate dueDate;
+    LocalDateTime dueDate;
     boolean completed;
+
     @CreatedDate
+    @Column(updatable = false)
     LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
