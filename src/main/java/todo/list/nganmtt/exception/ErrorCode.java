@@ -23,7 +23,8 @@ public enum ErrorCode {
     TASK_NOT_FOUND(2001, "Task not found", HttpStatus.NOT_FOUND),
     DUE_DATE_VALIDATION(2002, "Due date must be in the future", HttpStatus.BAD_REQUEST),
     DUE_DATE_REQUIRED(2003, "Due date is required", HttpStatus.BAD_REQUEST),
-    DELETE_USER_FAILED(3001, "Failed to delete user", HttpStatus.INTERNAL_SERVER_ERROR)
+    DELETE_USER_FAILED(3001, "Failed to delete user", HttpStatus.INTERNAL_SERVER_ERROR),
+    INVALID_PASSWORD_OLD(3002, "Old password is incorrect", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;

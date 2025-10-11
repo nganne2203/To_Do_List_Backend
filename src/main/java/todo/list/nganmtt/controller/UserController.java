@@ -49,6 +49,20 @@ public class UserController {
                 .build();
     }
 
+    @Operation(summary = "Change user password", description = "Change the authenticated user's password.", tags = {"User"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful password change", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad request because old password is incorrect", content = @Content)
+    })
+    @PostMapping("/change-password/{id}")
+    public ApiResult<Void> changePassword(@PathVariable String id, @RequestParam String newPassword, @RequestParam String oldPassword) {
+        userService.changePassword(id, newPassword, oldPassword);
+        return ApiResult.<Void>builder().build();
+    }
+
     @Operation(summary = "Delete my user account", description = "Delete the authenticated user's account.", tags = {"User"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful deletion of user account", content = {
