@@ -13,18 +13,16 @@ import todo.list.nganmtt.validator.RequiredField;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(
-        description = "Request object for user creation",
-        title = "UserCreationRequest",
+        description = "Request object for user update",
+        title = "UserUpdateRequest",
         requiredProperties = {
             "username",
-            "email",
-            "password"
+            "email"
         },
         example = """
         {
             "username": "johndoe",
-            "email": "abc@gmail.com",
-            "password": "securePassword123"
+            "email": "abc@gmail.com"
         }
         """
 )
@@ -36,8 +34,4 @@ public class UserUpdateRequest {
     @RequiredField
     @Email(message = "INVALID_EMAIL")
     String email;
-
-    @RequiredField
-    @Size(min = 6, message = "INVALID_PASSWORD")
-    String password;
 }

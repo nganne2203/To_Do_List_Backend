@@ -37,7 +37,6 @@ public class UserServiceImplement implements UserService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         userMapper.updateUser(updateUser, request);
-        updateUser.setPassword(passwordEncoder.encode(request.getPassword()));
 
         return userMapper.toUserResponse(userRepository.save(updateUser));
     }
@@ -53,5 +52,16 @@ public class UserServiceImplement implements UserService {
         }
     }
 
+    @Override
+    public void changePassword(String id, String newPassword, String oldPassword) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
+        boolean authenticated = passwordEncoder.matches(oldPassword, user.getPassword());
+        if (!authenticated) {
+            throw new AppException(ErrorCode.INVALID_PASSWORD_OLD);
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
 }

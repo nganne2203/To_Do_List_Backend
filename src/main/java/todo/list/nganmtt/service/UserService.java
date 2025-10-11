@@ -10,4 +10,6 @@ public interface UserService {
 
     void deleteMyAccount(String id);
 
+    void changePassword(String id, String newPassword, String oldPassword);
+
 }
