@@ -1,5 +1,6 @@
 package todo.list.nganmtt.service;
 
+import todo.list.nganmtt.dto.request.ChangePasswordRequest;
 import todo.list.nganmtt.dto.request.UserUpdateRequest;
 import todo.list.nganmtt.dto.response.UserResponse;
 
@@ -10,6 +11,6 @@ public interface UserService {
 
     void deleteMyAccount(String id);
 
-    void changePassword(String id, String newPassword, String oldPassword);
+    void changePassword(String id, ChangePasswordRequest request);
 
 }

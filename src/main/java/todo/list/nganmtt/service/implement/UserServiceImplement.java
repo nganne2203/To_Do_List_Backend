@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import todo.list.nganmtt.dto.request.ChangePasswordRequest;
 import todo.list.nganmtt.dto.request.UserUpdateRequest;
 import todo.list.nganmtt.dto.response.UserResponse;
 import todo.list.nganmtt.exception.AppException;
@@ -53,15 +54,15 @@ public class UserServiceImplement implements UserService {
     }
 
     @Override
-    public void changePassword(String id, String newPassword, String oldPassword) {
+    public void changePassword(String id, ChangePasswordRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        boolean authenticated = passwordEncoder.matches(oldPassword, user.getPassword());
+        boolean authenticated = passwordEncoder.matches(request.getCurrentPassword(), user.getPassword());
         if (!authenticated) {
             throw new AppException(ErrorCode.INVALID_PASSWORD_OLD);
         }
-        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
     }
 }

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 import todo.list.nganmtt.dto.request.ApiResult;
+import todo.list.nganmtt.dto.request.ChangePasswordRequest;
 import todo.list.nganmtt.dto.request.UserUpdateRequest;
 import todo.list.nganmtt.dto.response.UserResponse;
 import todo.list.nganmtt.service.UserService;
@@ -58,8 +59,8 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Bad request because old password is incorrect", content = @Content)
     })
     @PostMapping("/change-password/{id}")
-    public ApiResult<Void> changePassword(@PathVariable String id, @RequestParam String newPassword, @RequestParam String oldPassword) {
-        userService.changePassword(id, newPassword, oldPassword);
+    public ApiResult<Void> changePassword(@PathVariable String id, @RequestParam ChangePasswordRequest request) {
+        userService.changePassword(id, request);
         return ApiResult.<Void>builder().build();
     }
 
